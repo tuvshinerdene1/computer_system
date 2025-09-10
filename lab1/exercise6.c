@@ -21,8 +21,14 @@ int findLCD(int a, int b)
 void normalize(EngiinButarxai *a)
 {
     int gcd = findGCD(a->n, a->d);
+
     a->n /= gcd;
     a->d /= gcd;
+    if (a->n < 0)
+    {
+        a->n *= -1;
+        a->d *= -1;
+    }
 }
 /*
 Nemex uildel
