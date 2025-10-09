@@ -214,7 +214,11 @@ int isTmax(int x)
  */
 int allOddBits(int x)
 {
-  return 2;
+  // buh sondgoi bit uud 1 baih mask ashiglaw.
+  int mask = 0xAA;
+  mask = mask | (mask << 8);
+  mask = mask | (mask << 16);
+  return !((x & mask) ^ mask);
 }
 /*
  * negate - return -x
@@ -225,7 +229,8 @@ int allOddBits(int x)
  */
 int negate(int x)
 {
-  return 2;
+  // 2tiin guitseelten deer 1 - iig nemne
+  return ~x + 1;
 }
 // 3
 /*
@@ -252,7 +257,8 @@ int isAsciiDigit(int x)
  */
 int conditional(int x, int y, int z)
 {
-  return 2;
+  int mask = (!!x << 31) >> 31;
+  return (mask & y) | (~mask & z);
 }
 /*
  * isLessOrEqual - if x <= y  then return 1, else return 0
@@ -263,7 +269,11 @@ int conditional(int x, int y, int z)
  */
 int isLessOrEqual(int x, int y)
 {
-  return 2;
+  int sign_x = (x >> 31) & 1;
+  int sign_y = (y >> 31) & 1;
+  int sign_diff = ((x + (~y + 1)) >> 31) & 1;
+  int sign_differ = sign_x ^ sign_y;
+  return (sign_differ & sign_x) | (!sign_differ & (sign_diff | !(x ^ y)));
 }
 // 4
 /*
@@ -276,7 +286,7 @@ int isLessOrEqual(int x, int y)
  */
 int logicalNeg(int x)
 {
-  return 2;
+  return ((x | (~x + 1)) >> 31) + 1;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
@@ -292,7 +302,24 @@ int logicalNeg(int x)
  */
 int howManyBits(int x)
 {
-  return 0;
+  int sign = x >> 31;
+  int b16, b8, b4, b2, b1, b0;
+
+  x = (sign & ~x) | (~sign & x);
+
+  b16 = !!(x >> 16) << 4;
+  x = x >> b16;
+  b8 = !!(x >> 8) << 3;
+  x = x >> b8;
+  b4 = !!(x >> 4) << 2;
+  x = x >> b4;
+  b2 = !!(x >> 2) << 1;
+  x = x >> b2;
+  b1 = !!(x >> 1);
+  x = x >> b1;
+  b0 = x;
+
+  return b16 + b8 + b4 + b2 + b1 + b0 + 1;
 }
 // float
 /*
@@ -308,8 +335,21 @@ int howManyBits(int x)
  */
 unsigned floatScale2(unsigned uf)
 {
+  unsigned exp = (uf >> 23) & 0xFF;
+  unsigned sign = uf & 0x80000000;
+  unsigned frac = uf & 0x7FFFFF;
 
-  return 2;
+  if (exp == 0xFF)
+    return uf; /* NaN or infinity */
+  if (exp == 0)
+  { /* Denormalized */
+    frac <<= 1;
+    return sign | frac;
+  }
+  exp += 1;
+  if (exp == 0xFF)
+    return sign | 0x7F800000; /* Overflow to infinity */
+  return sign | (exp << 23) | frac;
 }
 /*
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
@@ -325,7 +365,26 @@ unsigned floatScale2(unsigned uf)
  */
 int floatFloat2Int(unsigned uf)
 {
-  return 2;
+  unsigned sign = uf >> 31;
+  unsigned exp = (uf >> 23) & 0xFF;
+  unsigned frac = uf & 0x7FFFFF;
+  int E = exp - 127;
+  int result;
+
+  if (exp == 0xFF || E > 30)
+    return 0x80000000u;
+  if (E < 0)
+    return 0;
+
+  frac = frac | 0x800000;
+  if (E < 23)
+    result = frac >> (23 - E);
+  else
+    result = frac << (E - 23);
+
+  if (sign)
+    return -result;
+  return result;
 }
 /*
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x
@@ -342,5 +401,11 @@ int floatFloat2Int(unsigned uf)
  */
 unsigned floatPower2(int x)
 {
-  return 2;
+  if (x < -149)
+    return 0; /* Too small, underflow */
+  if (x < -126)
+    return 1 << (149 + x); /* Denormalized */
+  if (x > 127)
+    return 0x7F800000;    /* Too large, overflow to infinity */
+  return (x + 127) << 23; /* Normalized */
 }
