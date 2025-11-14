@@ -1,0 +1,205 @@
+tuvshin-erdene@tuvshinerdene-M142:~$ cd Documents/University/semester5
+tuvshin-erdene@tuvshinerdene-M142:~/Documents/University/semester5$ ls
+'Computer System'   OS                           'quality and testing'
+ GameDev           'Probability and Statistics'   Syllabus.ods
+tuvshin-erdene@tuvshinerdene-M142:~/Documents/University/semester5$ cd 
+tuvshin-erdene@tuvshinerdene-M142:~$ cd Documents/University/semester5
+tuvshin-erdene@tuvshinerdene-M142:~/Documents/University/semester5$ ls
+'Computer System'   OS                           'quality and testing'
+ GameDev           'Probability and Statistics'   Syllabus.ods
+tuvshin-erdene@tuvshinerdene-M142:~/Documents/University/semester5$ cd Computer\ System/
+tuvshin-erdene@tuvshinerdene-M142:~/Documents/University/semester5/Computer System$ ls
+01-overview.pptx  assignment2  lab1  lecture   seminar4  seminar6  seminar8
+assignment1       bomblab      lab2  seminar3  seminar5  seminar7
+tuvshin-erdene@tuvshinerdene-M142:~/Documents/University/semester5/Computer System$ cd bomblab/bomb85/
+tuvshin-erdene@tuvshinerdene-M142:~/Documents/University/semester5/Computer System/bomblab/bomb85$ ls
+bomb  bomb.c  README
+tuvshin-erdene@tuvshinerdene-M142:~/Documents/University/semester5/Computer System/bomblab/bomb85$ gdb bomb
+GNU gdb (Ubuntu 15.0.50.20240403-0ubuntu1) 15.0.50.20240403-git
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from bomb...
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x00000000000014c9 <+0>:	endbr64
+   0x00000000000014cd <+4>:	push   %rbx
+   0x00000000000014ce <+5>:	cmp    $0x1,%edi
+   0x00000000000014d1 <+8>:	je     0x15cf <main+262>
+   0x00000000000014d7 <+14>:	mov    %rsi,%rbx
+   0x00000000000014da <+17>:	cmp    $0x2,%edi
+   0x00000000000014dd <+20>:	jne    0x1604 <main+315>
+   0x00000000000014e3 <+26>:	mov    0x8(%rsi),%rdi
+   0x00000000000014e7 <+30>:	lea    0x1b16(%rip),%rsi        # 0x3004
+   0x00000000000014ee <+37>:	call   0x1350 <fopen@plt>
+   0x00000000000014f3 <+42>:	mov    %rax,0x3db6(%rip)        # 0x52b0 <infile>
+   0x00000000000014fa <+49>:	test   %rax,%rax
+   0x00000000000014fd <+52>:	je     0x15e2 <main+281>
+   0x0000000000001503 <+58>:	call   0x1bc2 <initialize_bomb>
+   0x0000000000001508 <+63>:	lea    0x1cc1(%rip),%rdi        # 0x31d0
+   0x000000000000150f <+70>:	call   0x1240 <puts@plt>
+   0x0000000000001514 <+75>:	lea    0x1cf5(%rip),%rdi        # 0x3210
+   0x000000000000151b <+82>:	call   0x1240 <puts@plt>
+   0x0000000000001520 <+87>:	call   0x1e9e <read_line>
+   0x0000000000001525 <+92>:	mov    %rax,%rdi
+   0x0000000000001528 <+95>:	call   0x1627 <phase_1>
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x000000000000152d <+100>:	call   0x1fe0 <phase_defused>
+   0x0000000000001532 <+105>:	lea    0x1d07(%rip),%rdi        # 0x3240
+   0x0000000000001539 <+112>:	call   0x1240 <puts@plt>
+   0x000000000000153e <+117>:	call   0x1e9e <read_line>
+   0x0000000000001543 <+122>:	mov    %rax,%rdi
+   0x0000000000001546 <+125>:	call   0x164b <phase_2>
+   0x000000000000154b <+130>:	call   0x1fe0 <phase_defused>
+   0x0000000000001550 <+135>:	lea    0x1ae6(%rip),%rdi        # 0x303d
+   0x0000000000001557 <+142>:	call   0x1240 <puts@plt>
+   0x000000000000155c <+147>:	call   0x1e9e <read_line>
+   0x0000000000001561 <+152>:	mov    %rax,%rdi
+   0x0000000000001564 <+155>:	call   0x16bf <phase_3>
+   0x0000000000001569 <+160>:	call   0x1fe0 <phase_defused>
+   0x000000000000156e <+165>:	lea    0x1ae6(%rip),%rdi        # 0x305b
+   0x0000000000001575 <+172>:	call   0x1240 <puts@plt>
+   0x000000000000157a <+177>:	call   0x1e9e <read_line>
+   0x000000000000157f <+182>:	mov    %rax,%rdi
+   0x0000000000001582 <+185>:	call   0x17bb <phase_4>
+   0x0000000000001587 <+190>:	call   0x1fe0 <phase_defused>
+   0x000000000000158c <+195>:	lea    0x1cdd(%rip),%rdi        # 0x3270
+   0x0000000000001593 <+202>:	call   0x1240 <puts@plt>
+   0x0000000000001598 <+207>:	call   0x1e9e <read_line>
+   0x000000000000159d <+212>:	mov    %rax,%rdi
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x00000000000015a0 <+215>:	call   0x1834 <phase_5>
+   0x00000000000015a5 <+220>:	call   0x1fe0 <phase_defused>
+   0x00000000000015aa <+225>:	lea    0x1ab9(%rip),%rdi        # 0x306a
+   0x00000000000015b1 <+232>:	call   0x1240 <puts@plt>
+   0x00000000000015b6 <+237>:	call   0x1e9e <read_line>
+   0x00000000000015bb <+242>:	mov    %rax,%rdi
+   0x00000000000015be <+245>:	call   0x18c2 <phase_6>
+   0x00000000000015c3 <+250>:	call   0x1fe0 <phase_defused>
+   0x00000000000015c8 <+255>:	mov    $0x0,%eax
+   0x00000000000015cd <+260>:	pop    %rbx
+   0x00000000000015ce <+261>:	ret
+   0x00000000000015cf <+262>:	mov    0x3cba(%rip),%rax        # 0x5290 <stdin@GLIBC_2.2.5>
+   0x00000000000015d6 <+269>:	mov    %rax,0x3cd3(%rip)        # 0x52b0 <infile>
+   0x00000000000015dd <+276>:	jmp    0x1503 <main+58>
+   0x00000000000015e2 <+281>:	mov    0x8(%rbx),%rcx
+   0x00000000000015e6 <+285>:	mov    (%rbx),%rdx
+   0x00000000000015e9 <+288>:	lea    0x1a16(%rip),%rsi        # 0x3006
+   0x00000000000015f0 <+295>:	mov    $0x2,%edi
+   0x00000000000015f5 <+300>:	call   0x1340 <__printf_chk@plt>
+   0x00000000000015fa <+305>:	mov    $0x8,%edi
+   0x00000000000015ff <+310>:	call   0x1370 <exit@plt>
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0000000000001604 <+315>:	mov    (%rsi),%rdx
+   0x0000000000001607 <+318>:	lea    0x1a15(%rip),%rsi        # 0x3023
+   0x000000000000160e <+325>:	mov    $0x2,%edi
+   0x0000000000001613 <+330>:	mov    $0x0,%eax
+   0x0000000000001618 <+335>:	call   0x1340 <__printf_chk@plt>
+   0x000000000000161d <+340>:	mov    $0x8,%edi
+   0x0000000000001622 <+345>:	call   0x1370 <exit@plt>
+End of assembler dump.
+(gdb) disassemble phase_2
+Dump of assembler code for function phase_2:
+   0x000000000000164b <+0>:	endbr64
+   0x000000000000164f <+4>:	push   %rbp
+   0x0000000000001650 <+5>:	push   %rbx
+   0x0000000000001651 <+6>:	sub    $0x28,%rsp
+   0x0000000000001655 <+10>:	mov    %fs:0x28,%rax
+   0x000000000000165e <+19>:	mov    %rax,0x18(%rsp)
+   0x0000000000001663 <+24>:	xor    %eax,%eax
+   0x0000000000001665 <+26>:	mov    %rsp,%rsi
+   0x0000000000001668 <+29>:	call   0x1e59 <read_six_numbers>
+   0x000000000000166d <+34>:	cmpl   $0x0,(%rsp)
+   0x0000000000001671 <+38>:	jne    0x167a <phase_2+47>
+   0x0000000000001673 <+40>:	cmpl   $0x1,0x4(%rsp)
+   0x0000000000001678 <+45>:	je     0x167f <phase_2+52>
+   0x000000000000167a <+47>:	call   0x1e17 <explode_bomb>
+   0x000000000000167f <+52>:	mov    %rsp,%rbx
+   0x0000000000001682 <+55>:	lea    0x10(%rsp),%rbp
+   0x0000000000001687 <+60>:	jmp    0x1692 <phase_2+71>
+   0x0000000000001689 <+62>:	add    $0x4,%rbx
+   0x000000000000168d <+66>:	cmp    %rbp,%rbx
+   0x0000000000001690 <+69>:	je     0x16a3 <phase_2+88>
+   0x0000000000001692 <+71>:	mov    0x4(%rbx),%eax
+   0x0000000000001695 <+74>:	add    (%rbx),%eax
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0000000000001697 <+76>:	cmp    %eax,0x8(%rbx)
+   0x000000000000169a <+79>:	je     0x1689 <phase_2+62>
+   0x000000000000169c <+81>:	call   0x1e17 <explode_bomb>
+   0x00000000000016a1 <+86>:	jmp    0x1689 <phase_2+62>
+   0x00000000000016a3 <+88>:	mov    0x18(%rsp),%rax
+   0x00000000000016a8 <+93>:	sub    %fs:0x28,%rax
+   0x00000000000016b1 <+102>:	jne    0x16ba <phase_2+111>
+   0x00000000000016b3 <+104>:	add    $0x28,%rsp
+   0x00000000000016b7 <+108>:	pop    %rbx
+   0x00000000000016b8 <+109>:	pop    %rbp
+   0x00000000000016b9 <+110>:	ret
+   0x00000000000016ba <+111>:	call   0x1270 <__stack_chk_fail@plt>
+End of assembler dump.
+(gdb) break explode_bomb
+Breakpoint 1 at 0x1e17
+(gdb) run
+Starting program: /home/tuvshin-erdene/Documents/University/semester5/Computer System/bomblab/bomb85/bomb 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+hello
+
+Breakpoint 1, 0x0000555555555e17 in explode_bomb ()
+(gdb) Quit
+(gdb) disassemble phase_2
+Dump of assembler code for function phase_2:
+   0x000055555555564b <+0>:	endbr64
+   0x000055555555564f <+4>:	push   %rbp
+   0x0000555555555650 <+5>:	push   %rbx
+   0x0000555555555651 <+6>:	sub    $0x28,%rsp
+   0x0000555555555655 <+10>:	mov    %fs:0x28,%rax
+   0x000055555555565e <+19>:	mov    %rax,0x18(%rsp)
+   0x0000555555555663 <+24>:	xor    %eax,%eax
+   0x0000555555555665 <+26>:	mov    %rsp,%rsi
+   0x0000555555555668 <+29>:	call   0x555555555e59 <read_six_numbers>
+   0x000055555555566d <+34>:	cmpl   $0x0,(%rsp)
+   0x0000555555555671 <+38>:	jne    0x55555555567a <phase_2+47>
+   0x0000555555555673 <+40>:	cmpl   $0x1,0x4(%rsp)
+   0x0000555555555678 <+45>:	je     0x55555555567f <phase_2+52>
+   0x000055555555567a <+47>:	call   0x555555555e17 <explode_bomb>
+   0x000055555555567f <+52>:	mov    %rsp,%rbx
+   0x0000555555555682 <+55>:	lea    0x10(%rsp),%rbp
+   0x0000555555555687 <+60>:	jmp    0x555555555692 <phase_2+71>
+   0x0000555555555689 <+62>:	add    $0x4,%rbx
+   0x000055555555568d <+66>:	cmp    %rbp,%rbx
+   0x0000555555555690 <+69>:	je     0x5555555556a3 <phase_2+88>
+   0x0000555555555692 <+71>:	mov    0x4(%rbx),%eax
+   0x0000555555555695 <+74>:	add    (%rbx),%eax
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0000555555555697 <+76>:	cmp    %eax,0x8(%rbx)
+   0x000055555555569a <+79>:	je     0x555555555689 <phase_2+62>
+   0x000055555555569c <+81>:	call   0x555555555e17 <explode_bomb>
+   0x00005555555556a1 <+86>:	jmp    0x555555555689 <phase_2+62>
+   0x00005555555556a3 <+88>:	mov    0x18(%rsp),%rax
+   0x00005555555556a8 <+93>:	sub    %fs:0x28,%rax
+   0x00005555555556b1 <+102>:	jne    0x5555555556ba <phase_2+111>
+   0x00005555555556b3 <+104>:	add    $0x28,%rsp
+   0x00005555555556b7 <+108>:	pop    %rbx
+   0x00005555555556b8 <+109>:	pop    %rbp
+   0x00005555555556b9 <+110>:	ret
+   0x00005555555556ba <+111>:	call   0x555555555270 <__stack_chk_fail@plt>
+End of assembler dump.
+(gdb) x/s 0x28
+0x28:	<error: Cannot access memory at address 0x28>
+(gdb) x/s 0x555555555692
+0x555555555692 <phase_2+71>:	"\213C\004\003\0039C\bt\355\350v\a"
+(gdb) 
+

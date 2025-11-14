@@ -269,10 +269,10 @@ int conditional(int x, int y, int z)
  */
 int isLessOrEqual(int x, int y)
 {
-  int sign_x = (x >> 31) & 1;
-  int sign_y = (y >> 31) & 1;
-  int sign_diff = ((x + (~y + 1)) >> 31) & 1;
-  int sign_differ = sign_x ^ sign_y;
+  int sign_x = (x >> 31) & 1;                 // x - iin temdeg
+  int sign_y = (y >> 31) & 1;                 // y- iin temdeg
+  int sign_diff = ((x + (~y + 1)) >> 31) & 1; // x-y -iin temdgiin bit
+  int sign_differ = sign_x ^ sign_y;          // 1 - x,y uur temdegtei, 0-x,y ijilhen temdegtei
   return (sign_differ & sign_x) | (!sign_differ & (sign_diff | !(x ^ y)));
 }
 // 4
@@ -402,10 +402,10 @@ int floatFloat2Int(unsigned uf)
 unsigned floatPower2(int x)
 {
   if (x < -149)
-    return 0; /* Too small, underflow */
+    return 0; // underflow
   if (x < -126)
-    return 1 << (149 + x); /* Denormalized */
+    return 1 << (149 + x); // denormalized
   if (x > 127)
-    return 0x7F800000;    /* Too large, overflow to infinity */
-  return (x + 127) << 23; /* Normalized */
+    return 0x7F800000;    // overflow
+  return (x + 127) << 23; // normalized
 }
