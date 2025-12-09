@@ -1,0 +1,20 @@
+./sdriver.pl -t trace11.txt -s ./tsh -a "-p"
+#
+# trace11.txt - Forward SIGINT to every process in foreground process group
+#
+tsh> ./mysplit 4
+Job [1] (14163) terminated by signal 2
+tsh> /bin/ps a
+    PID TTY      STAT   TIME COMMAND
+   1460 tty2     SNsl+   0:00 /usr/libexec/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=pop /usr/bin/gnome-session --session=pop
+   1462 tty2     S<l+   1:53 /usr/lib/xorg/Xorg vt2 -displayfd 3 -auth /run/user/1000/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+   1523 tty2     SNl+   0:00 /usr/libexec/gnome-session-binary --session=pop
+   9310 pts/1    SNs+   0:00 /usr/bin/bash --init-file /snap/code/214/usr/share/code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+   9326 pts/2    SNs+   0:00 /usr/bin/bash --init-file /snap/code/214/usr/share/code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+   9618 pts/3    SNs+   0:00 /usr/bin/bash --init-file /snap/code/214/usr/share/code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+  10903 pts/4    Ss     0:00 /usr/bin/bash --init-file /snap/code/214/usr/share/code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+  14158 pts/4    SN+    0:00 make test11
+  14159 pts/4    SN+    0:00 /bin/sh -c ./sdriver.pl -t trace11.txt -s ./tsh -a "-p"
+  14160 pts/4    SN+    0:00 /usr/bin/perl ./sdriver.pl -t trace11.txt -s ./tsh -a -p
+  14161 pts/4    SN+    0:00 ./tsh -p
+  14186 pts/4    RN     0:00 /bin/ps a

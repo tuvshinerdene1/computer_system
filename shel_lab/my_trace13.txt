@@ -1,0 +1,39 @@
+./sdriver.pl -t trace13.txt -s ./tsh -a "-p"
+#
+# trace13.txt - Restart every stopped process in process group
+#
+tsh> ./mysplit 4
+Job [1] (14265) stopped by signal 20
+tsh> jobs
+[1] (14265) Stopped ./mysplit 4 
+tsh> /bin/ps a
+    PID TTY      STAT   TIME COMMAND
+   1460 tty2     SNsl+   0:00 /usr/libexec/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=pop /usr/bin/gnome-session --session=pop
+   1462 tty2     S<l+   1:54 /usr/lib/xorg/Xorg vt2 -displayfd 3 -auth /run/user/1000/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+   1523 tty2     SNl+   0:00 /usr/libexec/gnome-session-binary --session=pop
+   9310 pts/1    SNs+   0:00 /usr/bin/bash --init-file /snap/code/214/usr/share/code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+   9326 pts/2    SNs+   0:00 /usr/bin/bash --init-file /snap/code/214/usr/share/code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+   9618 pts/3    SNs+   0:00 /usr/bin/bash --init-file /snap/code/214/usr/share/code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+  10903 pts/4    Ss     0:00 /usr/bin/bash --init-file /snap/code/214/usr/share/code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+  14260 pts/4    SN+    0:00 make test13
+  14261 pts/4    SN+    0:00 /bin/sh -c ./sdriver.pl -t trace13.txt -s ./tsh -a "-p"
+  14262 pts/4    SN+    0:00 /usr/bin/perl ./sdriver.pl -t trace13.txt -s ./tsh -a -p
+  14263 pts/4    SN+    0:00 ./tsh -p
+  14265 pts/4    TN     0:00 ./mysplit 4
+  14266 pts/4    TN     0:00 ./mysplit 4
+  14269 pts/4    RN     0:00 /bin/ps a
+tsh> fg %1
+tsh> /bin/ps a
+    PID TTY      STAT   TIME COMMAND
+   1460 tty2     SNsl+   0:00 /usr/libexec/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=pop /usr/bin/gnome-session --session=pop
+   1462 tty2     S<l+   1:54 /usr/lib/xorg/Xorg vt2 -displayfd 3 -auth /run/user/1000/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+   1523 tty2     SNl+   0:00 /usr/libexec/gnome-session-binary --session=pop
+   9310 pts/1    SNs+   0:00 /usr/bin/bash --init-file /snap/code/214/usr/share/code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+   9326 pts/2    SNs+   0:00 /usr/bin/bash --init-file /snap/code/214/usr/share/code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+   9618 pts/3    SNs+   0:00 /usr/bin/bash --init-file /snap/code/214/usr/share/code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+  10903 pts/4    Ss     0:00 /usr/bin/bash --init-file /snap/code/214/usr/share/code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+  14260 pts/4    SN+    0:00 make test13
+  14261 pts/4    SN+    0:00 /bin/sh -c ./sdriver.pl -t trace13.txt -s ./tsh -a "-p"
+  14262 pts/4    SN+    0:00 /usr/bin/perl ./sdriver.pl -t trace13.txt -s ./tsh -a -p
+  14263 pts/4    SN+    0:00 ./tsh -p
+  14306 pts/4    RN     0:00 /bin/ps a
