@@ -5,7 +5,7 @@
 tsh> ./bogus
 ./bogus: Command not found.
 tsh> ./myspin 4 &
-[1] (14344) ./myspin 4 &
+[1] (28301) ./myspin 4 &
 tsh> fg
 fg command requires PID or %jobid argument
 tsh> bg
@@ -21,10 +21,10 @@ tsh> bg 9999999
 tsh> fg %2
 %2: No such job
 tsh> fg %1
-Job [1] (14344) stopped by signal 20
+Job [1] (28301) stopped by signal 20
 tsh> bg %2
 %2: No such job
 tsh> bg %1
-[1] (14344) ./myspin 4 &
+[1] (28301) ./myspin 4 &
 tsh> jobs
-[1] (14344) Running ./myspin 4 &
+[1] (28301) Running ./myspin 4 &

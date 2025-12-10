@@ -4,8 +4,8 @@
 #     signals that come from other processes instead of the terminal.
 #
 tsh> ./mystop 2
-Job [1] (14518) stopped by signal 20
+Job [1] (28492) stopped by signal 20
 tsh> jobs
-[1] (14518) Stopped ./mystop 2
+[1] (28492) Stopped ./mystop 2
 tsh> ./myint 2
-Job [2] (14521) terminated by signal 2
+Job [2] (28502) terminated by signal 2

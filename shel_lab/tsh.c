@@ -1,7 +1,7 @@
 /*
  * tsh - A tiny shell program with job control
  *
- * <Put your name and login ID here>
+ * <E.Tuvshin-Erdene  23b1num0869>
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,6 +24,16 @@
 #define FG 1    /* running in foreground */
 #define BG 2    /* running in background */
 #define ST 3    /* stopped */
+
+/*
+ * Jobs states: FG (foreground), BG (background), ST (stopped)
+ * Job state transitions and enabling actions:
+ *     FG -> ST  : ctrl-z
+ *     ST -> FG  : fg command
+ *     ST -> BG  : bg command
+ *     BG -> FG  : fg command
+ * At most 1 job can be in the FG state.
+ */
 
 /* Global variables */
 extern char **environ;   /* defined in libc */
@@ -51,7 +61,7 @@ void sigchld_handler(int sig);
 void sigtstp_handler(int sig);
 void sigint_handler(int sig);
 
-/* Helper routines */
+/* Here are helper routines that we've provided for you */
 int parseline(const char *cmdline, char **argv);
 void sigquit_handler(int sig);
 void clearjob(struct job_t *job);
@@ -77,35 +87,43 @@ int main(int argc, char **argv)
 {
     char c;
     char cmdline[MAXLINE];
-    int emit_prompt = 1;
+    int emit_prompt = 1; /* emit prompt (default) */
 
+    /* Redirect stderr to stdout (so that driver will get all output
+     * on the pipe connected to stdout) */
     dup2(1, 2);
 
+    /* Parse the command line */
     while ((c = getopt(argc, argv, "hvp")) != EOF)
     {
         switch (c)
         {
-        case 'h':
+        case 'h': /* print help message */
             usage();
             break;
-        case 'v':
+        case 'v': /* emit additional diagnostic info */
             verbose = 1;
             break;
-        case 'p':
-            emit_prompt = 0;
+        case 'p':            /* don't print a prompt */
+            emit_prompt = 0; /* handy for automatic testing */
             break;
         default:
             usage();
         }
     }
+    /* Install the signal handlers */
 
-    Signal(SIGINT, sigint_handler);
-    Signal(SIGTSTP, sigtstp_handler);
-    Signal(SIGCHLD, sigchld_handler);
+    /* These are the ones you will need to implement */
+    Signal(SIGINT, sigint_handler);   /* ctrl-c */
+    Signal(SIGTSTP, sigtstp_handler); /* ctrl-z */
+    Signal(SIGCHLD, sigchld_handler); /* Terminated or stopped child */
+
+    /* This one provides a clean way to kill the shell */
     Signal(SIGQUIT, sigquit_handler);
 
+    /* Initialize the job list */
     initjobs(jobs);
-
+    /* Execute the shell's read/eval loop */
     while (1)
     {
         if (emit_prompt)
@@ -116,11 +134,11 @@ int main(int argc, char **argv)
         if ((fgets(cmdline, MAXLINE, stdin) == NULL) && ferror(stdin))
             app_error("fgets error");
         if (feof(stdin))
-        {
+        { /* End of file (ctrl-d) */
             fflush(stdout);
             exit(0);
         }
-
+        /* Evaluate the command line */
         eval(cmdline);
         fflush(stdout);
         fflush(stdout);
@@ -143,30 +161,23 @@ void eval(char *cmdline)
     strcpy(buf, cmdline);      // Оруулсан коммандыг буфер руу хуулах
     bg = parseline(buf, argv); // Коммандыг задалж аргументуудад хуваах ба BG эсэхийг шалгах
 
-    /* Ignore empty lines */
     if (argv[0] == NULL) // Хэрэв комманд хоосон байвал
         return;          // Функцээс буцах
 
-    /* If it is a built-in command, run it immediately */
     if (!builtin_cmd(argv)) // Хэрэв built-in (дотоод) комманд биш бол (ж.нь: ls, sleep)
     {
-        /*
-         * Signal Blocking:
-         * We must block SIGCHLD before forking to prevent a race condition
-         */
+
         sigfillset(&mask_all);         // Бүх сигналыг агуулсан багцыг бэлтгэх
         sigemptyset(&mask_one);        // Хоосон сигналын багц үүсгэх
         sigaddset(&mask_one, SIGCHLD); // Багцад SIGCHLD сигналыг нэмэх
 
-        /* Block SIGCHLD */
         sigprocmask(SIG_BLOCK, &mask_one, &prev_one); // SIGCHLD сигналыг түр хаах (block)
 
         if ((pid = fork()) == 0) // Хүү процесс үүсгэх (fork хийх)
         {                        /* Child process */
-            /* Child unblocks signals (inherits blocked status from parent) */
+
             sigprocmask(SIG_SETMASK, &prev_one, NULL); // Хүү процесс дотор сигналыг буцааж нээх (unblock)
 
-            /* Put child in a new process group */
             setpgid(0, 0); // Хүү процессыг шинэ бүлэгт оруулах (бүлгийн ID-г өөрийн PID-тай ижил болгох)
 
             if (execve(argv[0], argv, environ) < 0) // Шинэ программыг ачаалж ажиллуулах
@@ -176,18 +187,15 @@ void eval(char *cmdline)
             }
         }
 
-        /* Parent process */
-        /* Block all signals while adding to job list (global data structure) */
-        sigprocmask(SIG_BLOCK, &mask_all, NULL);                               // Жагсаалттай ажиллаж байх үед бүх сигналыг хаах
-        addjob(jobs, pid, bg ? BG : FG, cmdline);                              // Ажлын жагсаалтад (jobs list) шинэ процессыг нэмэх
-        sigprocmask(SIG_SETMASK, &prev_one, NULL); /* Restore original mask */ // Сигналуудыг буцааж хэвийн төлөвт оруулах
+        sigprocmask(SIG_BLOCK, &mask_all, NULL);   // Жагсаалттай ажиллаж байх үед бүх сигналыг хаах
+        addjob(jobs, pid, bg ? BG : FG, cmdline);  // Ажлын жагсаалтад (jobs list) шинэ процессыг нэмэх
+        sigprocmask(SIG_SETMASK, &prev_one, NULL); // Сигналуудыг буцааж хэвийн төлөвт оруулах
 
-        /* Foreground Job */
         if (!bg) // Хэрэв нүүрэн талын (foreground) ажил бол
         {
             waitfg(pid); // Тухайн процесс дуустал эсвэл зогстол хүлээх
         }
-        /* Background Job */
+
         else // Хэрэв арын (background) ажил бол
         {
             printf("[%d] (%d) %s", pid2jid(pid), pid, cmdline); // Ажлын мэдээллийг дэлгэцэнд хэвлэх
@@ -320,14 +328,13 @@ void do_bgfg(char **argv)
         return;                                                     // Буцах
     }
 
-    /* Handle bg command */
     if (strcmp(argv[0], "bg") == 0) // Хэрэв комманд "bg" байвал
     {
         job->state = BG;                                          // Ажлын төлөвийг Background (BG) болгож өөрчлөх
         kill(-(job->pid), SIGCONT);                               // Процессын бүлэгт SIGCONT сигнал илгээж ажиллагааг үргэлжлүүлэх
         printf("[%d] (%d) %s", job->jid, job->pid, job->cmdline); // Мэдээллийг хэвлэх
     }
-    /* Handle fg command */
+
     else // Хэрэв комманд "fg" байвал
     {
         job->state = FG;            // Ажлын төлөвийг Foreground (FG) болгож өөрчлөх
@@ -343,9 +350,7 @@ void do_bgfg(char **argv)
  */
 void waitfg(pid_t pid)
 {
-    /*
-     * Spin wait: check if the process is still the foreground process.
-     */
+
     while (pid == fgpid(jobs)) // Тухайн PID нь FG (нүүрэн талын) процесс байсаар байвал давталт хийнэ
     {
         sleep(0); // CPU-г ачааллахгүйн тулд түр хүлээх (context switch хийх боломж олгох)
@@ -363,54 +368,40 @@ void waitfg(pid_t pid)
  */
 void sigchld_handler(int sig)
 {
-    int olderrno = errno; // Глобал errno хувьсагчийг хадгалж авах (handler дотор өөрчлөгдөхөөс сэргийлэх)
-    pid_t pid;            // Процессын ID
-    int status;           // Процессын төлөв
-    struct job_t *job;    // Ажлын бүтэц
+    int olderrno = errno;
+    pid_t pid;
+    int status;
+    struct job_t *job;
 
-    /*
-     * WNOHANG: return immediately if no child has exited
-     * WUNTRACED: also return if a child has stopped (but not traced)
-     */
-    // Дууссан эсвэл зогссон бүх хүү процессуудыг шалгах (waitpid-г блоклохгүй горимоор дуудах)
     while ((pid = waitpid(-1, &status, WNOHANG | WUNTRACED)) > 0)
     {
-
-        /* Case 1: Child exited normally */
-        if (WIFEXITED(status)) // Хэрэв хүү процесс хэвийн дууссан бол
+        if (WIFEXITED(status))
         {
-            deletejob(jobs, pid); // Ажлын жагсаалтаас хасах
+            deletejob(jobs, pid);
         }
-
-        /* Case 2: Child terminated by a signal (e.g., Ctrl-C / SIGINT) */
-        else if (WIFSIGNALED(status)) // Хэрэв хүү процесс гадны сигналаар (ж.нь: SIGINT) дуусгавар болсон бол
+        else if (WIFSIGNALED(status))
         {
-            job = getjobpid(jobs, pid); // PID-аар ажлыг олох
+            job = getjobpid(jobs, pid);
             if (job != NULL)
             {
-                // Ямар сигналаар дууссан тухай мэдээллийг хэвлэх
                 printf("Job [%d] (%d) terminated by signal %d\n",
                        job->jid, job->pid, WTERMSIG(status));
+                deletejob(jobs, pid);
             }
-            deletejob(jobs, pid); // Ажлын жагсаалтаас хасах
         }
-
-        /* Case 3: Child stopped (e.g., Ctrl-Z / SIGTSTP) */
-        else if (WIFSTOPPED(status)) // Хэрэв хүү процесс түр зогссон (stopped) бол
+        else if (WIFSTOPPED(status))
         {
-            job = getjobpid(jobs, pid); // PID-аар ажлыг олох
+            job = getjobpid(jobs, pid);
             if (job != NULL)
             {
-                job->state = ST; // Ажлын төлөвийг Stopped (ST) болгож өөрчлөх
-                // Ямар сигналаар зогссон тухай мэдээллийг хэвлэх
+                job->state = ST;
                 printf("Job [%d] (%d) stopped by signal %d\n",
                        job->jid, job->pid, WSTOPSIG(status));
             }
         }
     }
 
-    errno = olderrno; // errno-г буцааж сэргээх
-    return;           // Функцээс гарах
+    errno = olderrno;
 }
 
 /*
@@ -424,7 +415,7 @@ void sigint_handler(int sig)
 
     if (pid != 0) // Хэрэв нүүрэн талд процесс байвал
     {
-        /* Send SIGINT to the entire process group (-pid) */
+
         kill(-pid, SIGINT); // Тухайн процессын бүлэгт (бүх хүү процессуудад) SIGINT илгээх
     }
 
@@ -443,7 +434,7 @@ void sigtstp_handler(int sig)
 
     if (pid != 0) // Хэрэв нүүрэн талд процесс байвал
     {
-        /* Send SIGTSTP to the entire process group (-pid) */
+
         kill(-pid, SIGTSTP); // Тухайн процессын бүлэгт (бүх хүү процессуудад) SIGTSTP илгээх
     }
 

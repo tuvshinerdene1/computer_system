@@ -3,8 +3,8 @@
 # trace07.txt - Forward SIGINT only to foreground job.
 #
 tsh> ./myspin 4 &
-[1] (13993) ./myspin 4 &
+[1] (27937) ./myspin 4 &
 tsh> ./myspin 5
-Job [2] (13995) terminated by signal 2
+Job [2] (27939) terminated by signal 2
 tsh> jobs
-[1] (13993) Running ./myspin 4 &
+[1] (27937) Running ./myspin 4 &
